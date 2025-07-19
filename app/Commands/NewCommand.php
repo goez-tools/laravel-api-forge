@@ -376,8 +376,8 @@ SHELL;
         $this->updateUserModel(function ($userModel) {
             // Add HasApiTokens import
             $userModel = str_replace(
-                'use Illuminate\Foundation\Auth\User as Authenticatable;',
-                "use Illuminate\Foundation\Auth\User as Authenticatable;\nuse Laravel\Sanctum\HasApiTokens;",
+                'use Illuminate\Notifications\Notifiable;',
+                "use Illuminate\Notifications\Notifiable;\nuse Laravel\Sanctum\HasApiTokens;",
                 $userModel
             );
 
