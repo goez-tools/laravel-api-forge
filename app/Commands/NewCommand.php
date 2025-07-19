@@ -512,19 +512,12 @@ SHELL;
     private function preConfigureComposerForModules(): void
     {
         $composerFile = $this->projectPath.'/composer.json';
-        $content = File::get($composerFile);
+        $composer = json_decode(File::get($composerFile), true);
 
         // Add wikimedia/composer-merge-plugin to allow-plugins to avoid prompt
-        // Look for existing "php-http/discovery": true and add the new entry after it
-        if (str_contains($content, '"php-http/discovery": true')) {
-            $content = str_replace(
-                '"php-http/discovery": true',
-                '"php-http/discovery": true,'."\n".'            "wikimedia/composer-merge-plugin": true',
-                $content
-            );
-        }
+        $composer['config']['allow-plugins']['wikimedia/composer-merge-plugin'] = true;
 
-        File::put($composerFile, $content);
+        File::put($composerFile, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 
     private function createViteModuleLoader(): void
