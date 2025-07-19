@@ -3,6 +3,7 @@
 namespace App\Commands;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use LaravelZero\Framework\Commands\Command;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Process\Process;
@@ -337,11 +338,12 @@ SHELL;
     {
         $this->task('Setting up Laravel Sail', function () {
             // Update .env and .env.example for MySQL
+            $dbName = Str::of($this->projectName)->camel()->snake();
             $this->updateEnvFiles([
                 'DB_CONNECTION=sqlite' => 'DB_CONNECTION=mysql',
                 '# DB_HOST=127.0.0.1' => 'DB_HOST=mysql',
                 '# DB_PORT=3306' => 'DB_PORT=3306',
-                '# DB_DATABASE=laravel' => "DB_DATABASE={$this->projectName}",
+                '# DB_DATABASE=laravel' => "DB_DATABASE={$dbName}",
                 '# DB_USERNAME=root' => 'DB_USERNAME=sail',
                 '# DB_PASSWORD=' => 'DB_PASSWORD=password',
             ]);
