@@ -1,41 +1,207 @@
-<p align="center">
-    <img title="Laravel Zero" height="100" src="https://raw.githubusercontent.com/laravel-zero/docs/master/images/logo/laravel-zero-readme.png" alt="Laravel Zero Logo" />
-</p>
+# Laravel API Forge
 
-<p align="center">
-  <a href="https://github.com/laravel-zero/framework/actions"><img src="https://github.com/laravel-zero/laravel-zero/actions/workflows/tests.yml/badge.svg" alt="Build Status" /></a>
-  <a href="https://packagist.org/packages/laravel-zero/framework"><img src="https://img.shields.io/packagist/dt/laravel-zero/framework.svg" alt="Total Downloads" /></a>
-  <a href="https://packagist.org/packages/laravel-zero/framework"><img src="https://img.shields.io/packagist/v/laravel-zero/framework.svg?label=stable" alt="Latest Stable Version" /></a>
-  <a href="https://packagist.org/packages/laravel-zero/framework"><img src="https://img.shields.io/packagist/l/laravel-zero/framework.svg" alt="License" /></a>
-</p>
+[![PHP Version](https://img.shields.io/badge/php-%3E%3D8.2-blue.svg)](https://www.php.net/)
+[![Laravel](https://img.shields.io/badge/laravel-%3E%3D11.0-red.svg)](https://laravel.com/)
+[![Laravel Installer](https://img.shields.io/badge/laravel--installer-%3E%3D5.0-orange.svg)](https://laravel.com/docs/installation)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Laravel Zero was created by [Nuno Maduro](https://github.com/nunomaduro) and [Owen Voke](https://github.com/owenvoke), and is a micro-framework that provides an elegant starting point for your console application. It is an **unofficial** and customized version of Laravel optimized for building command-line applications.
+*[正體中文](README.ZH-TW.md) | English*
 
-- Built on top of the [Laravel](https://laravel.com) components.
-- Optional installation of Laravel [Eloquent](https://laravel-zero.com/docs/database/), Laravel [Logging](https://laravel-zero.com/docs/logging/) and many others.
-- Supports interactive [menus](https://laravel-zero.com/docs/build-interactive-menus/) and [desktop notifications](https://laravel-zero.com/docs/send-desktop-notifications/) on Linux, Windows & MacOS.
-- Ships with a [Scheduler](https://laravel-zero.com/docs/task-scheduling/) and  a [Standalone Compiler](https://laravel-zero.com/docs/build-a-standalone-application/).
-- Integration with [Collision](https://github.com/nunomaduro/collision) - Beautiful error reporting
-- Follow the creator Nuno Maduro:
-    - YouTube: **[youtube.com/@nunomaduro](https://www.youtube.com/@nunomaduro)** — Videos every weekday
-    - Twitch: **[twitch.tv/enunomaduro](https://www.twitch.tv/enunomaduro)** — Streams (almost) every weekday
-    - Twitter / X: **[x.com/enunomaduro](https://x.com/enunomaduro)**
-    - LinkedIn: **[linkedin.com/in/nunomaduro](https://www.linkedin.com/in/nunomaduro)**
-    - Instagram: **[instagram.com/enunomaduro](https://www.instagram.com/enunomaduro)**
-    - Tiktok: **[tiktok.com/@enunomaduro](https://www.tiktok.com/@enunomaduro)**
+Laravel API Forge is a powerful command-line tool that helps you quickly scaffold a complete Laravel API project with modern development practices and essential packages pre-configured. It's built on top of Laravel Zero and automates the setup of a production-ready Laravel API with optional features like Redis caching, RBAC (Role-Based Access Control), and modular architecture.
 
-------
+## ✨ Features
 
-## Documentation
+- **🚀 Quick Setup**: Create a complete Laravel API project in minutes
+- **🔧 Environment Validation**: Automatically checks for required tools and versions
+- **📝 Code Quality**: Automatic code formatting with Laravel Pint
+- **🔄 Git Integration**: Step-by-step Git commits with meaningful messages
+- **🐳 Docker Ready**: Laravel Sail configuration with MySQL and Redis
+- **🔐 Authentication**: Laravel Sanctum API authentication setup
+- **📊 Database**: MySQL database configuration with Laravel Sail
+- **⚡ Redis Cache**: Optional Redis caching configuration
+- **🛡️ RBAC System**: Optional role-based access control with Spatie Permission
+- **🧩 Modular Architecture**: Optional Laravel Modules for modular development
+- **📚 API Documentation**: Spectator for OpenAPI specification testing
+- **🎯 Data Transfer Objects**: Laravel Data for structured data handling
+- **🪝 Git Hooks**: Pre-configured Git hooks for code quality checks
 
-For full documentation, visit [laravel-zero.com](https://laravel-zero.com/).
+## 📋 Requirements
 
-## Support the development
-**Do you like this project? Support it by donating**
+Before using Laravel API Forge, make sure you have the following tools installed:
 
-- PayPal: [Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=66BYDWAT92N6L)
-- Patreon: [Donate](https://www.patreon.com/nunomaduro)
+- **PHP 8.2+**: [Download PHP](https://www.php.net/downloads.php)
+- **Composer**: [Install Composer](https://getcomposer.org/download/)
+- **Laravel Installer 5.0+**: `composer global require laravel/installer`
+- **Git**: [Install Git](https://git-scm.com/downloads)
 
-## License
+The tool will automatically validate these requirements before starting.
 
-Laravel Zero is an open-source software licensed under the MIT license.
+## 🚀 Installation
+
+Install Laravel API Forge globally using Composer:
+
+```bash
+composer global require goez/laravel-api-forge
+```
+
+Make sure your global Composer vendor bin directory is in your `$PATH`. You can add this to your shell profile (`.bashrc`, `.zshrc`, etc.):
+
+```bash
+# For bash/zsh
+export PATH="$PATH:$HOME/.composer/vendor/bin"
+
+# Alternative path on some systems
+export PATH="$PATH:$HOME/.config/composer/vendor/bin"
+```
+
+After installation, you can use the tool globally:
+
+```bash
+laravel-api-forge --version
+laravel-api-forge list
+```
+
+## 📖 Usage
+
+### Basic Usage
+
+Create a new Laravel API project:
+
+```bash
+laravel-api-forge new my-api-project
+```
+
+### Advanced Usage with Options
+
+```bash
+laravel-api-forge new my-api-project --redis --rbac --modules
+```
+
+### Available Options
+
+- `--redis`: Use Redis as the cache store
+- `--rbac`: Install and configure RBAC (Role-Based Access Control) package
+- `--modules`: Install and configure modular architecture with Laravel Modules
+
+### Interactive Mode
+
+If you don't specify options, the tool will prompt you interactively:
+
+```bash
+laravel-api-forge new my-api-project
+
+# You'll be asked:
+# Do you want to use Redis as cache store? (yes/no)
+# Do you want to install RBAC package? (yes/no)  
+# Do you want to install modular architecture? (yes/no)
+```
+
+## 🏗️ What Gets Created
+
+The tool creates a complete Laravel API project with:
+
+### Core Setup
+- Laravel 11+ with Pest testing framework
+- Laravel Sanctum for API authentication
+- API routes with `/v1` prefix
+- MySQL database configuration
+- Laravel Sail for Docker development environment
+
+### Optional Features (based on your choices)
+
+#### Redis Cache (`--redis`)
+- Redis cache configuration
+- Removes database cache migration
+- Updates environment files
+
+#### RBAC System (`--rbac`)
+- Spatie Laravel Permission package
+- Team-based permissions support
+- Pre-configured User model with roles
+- Abilities directory structure
+
+#### Modular Architecture (`--modules`)
+- Laravel Modules package
+- Modular directory structure
+- Vite integration for module assets
+- Composer merge plugin for module dependencies
+
+### Additional Packages
+- **Laravel Data**: For structured data transfer objects
+- **Spectator**: For OpenAPI specification testing
+- **Laravel Pint**: For code style formatting
+
+### Development Tools
+- Pre-configured Git hooks (pre-commit, pre-push, post-merge)
+- Automatic code formatting with Pint
+- Environment file synchronization (.env and .env.example)
+- Step-by-step Git commits for better history
+
+## 🔄 Development Workflow
+
+After creating your project:
+
+```bash
+cd my-api-project
+
+# Start the development environment
+./vendor/bin/sail up -d
+
+# Run migrations
+./vendor/bin/sail artisan migrate
+
+# Run tests
+./vendor/bin/sail composer test
+
+# Code formatting
+./vendor/bin/sail composer lint
+```
+
+## 📁 Project Structure
+
+```
+my-api-project/
+├── app/
+│   ├── Models/User.php          # Enhanced with Sanctum & RBAC
+│   └── Abilities/               # RBAC abilities (if enabled)
+├── docs/v1/                     # API documentation
+├── modules/                     # Modular architecture (if enabled)
+├── tests/
+├── .git-hooks/                  # Pre-configured Git hooks
+├── docker-compose.yml           # Laravel Sail configuration
+└── vite-module-loader.js        # Module asset loading (if enabled)
+```
+
+## ⚙️ Configuration
+
+The tool automatically configures:
+
+- **Database**: MySQL with Laravel Sail
+- **Cache**: Redis (if selected) or file-based
+- **API**: Sanctum authentication with `/v1` prefix
+- **Testing**: Pest with LazilyRefreshDatabase
+- **Code Quality**: Laravel Pint with pre-commit hooks
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+Laravel API Forge is open-sourced software licensed under the [MIT license](LICENSE).
+
+## 🙏 Acknowledgments
+
+- Built with [Laravel Zero](https://laravel-zero.com/)
+- Inspired by modern Laravel development practices
+- Thanks to the Laravel community for the amazing ecosystem
+
+---
+
+**Happy coding! 🚀**
