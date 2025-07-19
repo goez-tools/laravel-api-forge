@@ -403,6 +403,7 @@ SHELL;
 
             // Create Abilities directory
             File::makeDirectory($this->projectPath.'/app/Abilities', 0755, false, true);
+            File::put($this->projectPath.'/app/Abilities/.gitkeep', '');
 
             // Update permission config for teams
             $this->updatePermissionConfig();
