@@ -17,6 +17,7 @@ class NewCommand extends Command
     protected $signature = 'new {name}
                            {--redis : Use Redis as cache store}
                            {--rbac : Install and configure RBAC package}
+                           {--otp : Install and configure One-Time-Passwords package}
                            {--modules : Install and configure modular architecture}';
 
     /**
@@ -35,6 +36,8 @@ class NewCommand extends Command
     private bool $useRedis = false;
 
     private bool $useRbac = false;
+
+    private bool $useOtp = false;
 
     private bool $useModules = false;
 
@@ -57,6 +60,8 @@ class NewCommand extends Command
         // Get optional features
         $this->useRedis = $this->option('redis') ?: $this->confirm('Do you want to use Redis as cache store?', true);
         $this->useRbac = $this->option('rbac') ?: $this->confirm('Do you want to install RBAC package?', true);
+        $this->useOtp = $this->option('otp')
+            ?: $this->confirm('Do you want to install One-Time-Passwords package?', true);
         $this->useModules = $this->option('modules')
             ?: $this->confirm('Do you want to install modular architecture?', true);
 
@@ -81,6 +86,11 @@ class NewCommand extends Command
             if ($this->useRbac) {
                 $this->setupRbac();
                 $this->commitStep('Setup RBAC package');
+            }
+
+            if ($this->useOtp) {
+                $this->setupOtp();
+                $this->commitStep('Install One-Time-Passwords package');
             }
 
             if ($this->useModules) {
@@ -124,6 +134,7 @@ class NewCommand extends Command
         $this->line('Selected features:');
         $this->line(($this->useRedis ? '✅' : '❌').' Redis Cache');
         $this->line(($this->useRbac ? '✅' : '❌').' RBAC Package');
+        $this->line(($this->useOtp ? '✅' : '❌').' One-Time-Passwords Package');
         $this->line(($this->useModules ? '✅' : '❌').' Modular Architecture');
         $this->newLine();
     }
@@ -471,6 +482,47 @@ SHELL;
         $this->task('Finalizing RBAC configuration', function () {
             // Now it's safe to add RBAC reset command since Sail should be running
             $this->updateComposerForRbac();
+        });
+    }
+
+    private function setupOtp(): void
+    {
+        $this->task('Setting up One-Time-Passwords package', function () {
+            // Install OTP package
+            $this->executeCommand(['composer', 'require', 'spatie/laravel-one-time-passwords']);
+
+            // Publish configurations
+            $this->executeCommand([
+                $this->phpExecutable, 'artisan', 'vendor:publish',
+                '--tag=one-time-passwords-migrations', '--no-interaction',
+            ]);
+
+            // Update User model for OTP
+            $this->updateUserModelForOtp();
+
+            // Run migrations
+            $this->executeCommand(['composer', 'update', '--lock']);
+        });
+    }
+
+    private function updateUserModelForOtp(): void
+    {
+        $this->updateUserModel(function ($userModel) {
+            // Add HasRoles import
+            if (! str_contains($userModel, 'use Spatie\Permission\Traits\HasRoles;')) {
+                $userModel = str_replace(
+                    'use Laravel\Sanctum\HasApiTokens;',
+                    "use Laravel\Sanctum\HasApiTokens;\nuse Spatie\OneTimePasswords\Models\Concerns\HasOneTimePasswords;",
+                    $userModel
+                );
+            }
+
+            // Add HasRoles trait
+            return str_replace(
+                'use HasApiTokens, HasFactory',
+                'use HasApiTokens, HasFactory, HasOneTimePasswords',
+                $userModel
+            );
         });
     }
 
