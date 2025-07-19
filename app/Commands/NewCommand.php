@@ -217,23 +217,31 @@ SHELL;
             File::put($this->projectPath.'/.git-hooks/post-merge', $postMerge);
             chmod($this->projectPath.'/.git-hooks/post-merge', 0755);
 
-            // Update composer.json
-            $this->updateComposerJson();
+            $this->updateComposerScript();
         });
     }
 
-    private function updateComposerJson(): void
+    private function updateComposerJson(callable $callback): void
     {
         $composerFile = $this->projectPath.'/composer.json';
         $composer = json_decode(File::get($composerFile), true);
 
-        // Update post-autoload-dump
-        $composer['scripts']['post-autoload-dump'][] = 'git config --local core.hooksPath .git-hooks/ || exit 0';
-
-        // Add lint script
-        $composer['scripts']['lint'] = ['vendor/bin/pint'];
+        $composer = $callback($composer);
 
         File::put($composerFile, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    }
+
+    private function updateComposerScript(): void
+    {
+        $this->updateComposerJson(function ($composer) {
+            // Update post-autoload-dump
+            $composer['scripts']['post-autoload-dump'][] = 'git config --local core.hooksPath .git-hooks/ || exit 0';
+
+            // Add lint script
+            $composer['scripts']['lint'] = ['vendor/bin/pint'];
+
+            return $composer;
+        });
     }
 
     private function setupRedisCache(): void
@@ -433,16 +441,15 @@ SHELL;
 
     private function updateComposerForRbac(): void
     {
-        $composerFile = $this->projectPath.'/composer.json';
-        $composer = json_decode(File::get($composerFile), true);
+        $this->updateComposerJson(function ($composer) {
+            // Add RBAC reset to post-autoload-dump
+            $index = array_search('@php artisan package:discover --ansi', $composer['scripts']['post-autoload-dump']);
+            if ($index !== false) {
+                array_splice($composer['scripts']['post-autoload-dump'], $index + 1, 0, '@php artisan rbac:reset');
+            }
 
-        // Add RBAC reset to post-autoload-dump
-        $index = array_search('@php artisan package:discover --ansi', $composer['scripts']['post-autoload-dump']);
-        if ($index !== false) {
-            array_splice($composer['scripts']['post-autoload-dump'], $index + 1, 0, '@php artisan rbac:reset');
-        }
-
-        File::put($composerFile, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            return $composer;
+        });
     }
 
     private function finalizeRbac(): void
@@ -499,25 +506,23 @@ SHELL;
 
     private function updateComposerForModules(): void
     {
-        $composerFile = $this->projectPath.'/composer.json';
-        $composer = json_decode(File::get($composerFile), true);
+        $this->updateComposerJson(function ($composer) {
+            $composer['extra']['merge-plugin'] = [
+                'include' => ['modules/*/composer.json'],
+            ];
 
-        $composer['extra']['merge-plugin'] = [
-            'include' => ['modules/*/composer.json'],
-        ];
-
-        File::put($composerFile, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            return $composer;
+        });
     }
 
     private function preConfigureComposerForModules(): void
     {
-        $composerFile = $this->projectPath.'/composer.json';
-        $composer = json_decode(File::get($composerFile), true);
+        $this->updateComposerJson(function ($composer) {
+            // Add wikimedia/composer-merge-plugin to allow-plugins to avoid prompt
+            $composer['config']['allow-plugins']['wikimedia/composer-merge-plugin'] = true;
 
-        // Add wikimedia/composer-merge-plugin to allow-plugins to avoid prompt
-        $composer['config']['allow-plugins']['wikimedia/composer-merge-plugin'] = true;
-
-        File::put($composerFile, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+            return $composer;
+        });
     }
 
     private function createViteModuleLoader(): void
