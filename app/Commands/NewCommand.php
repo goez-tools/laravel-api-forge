@@ -339,7 +339,7 @@ SHELL;
             $this->executeCommand([$this->phpExecutable, 'artisan', 'install:api', '--no-interaction']);
 
             // Update User model
-            $this->updateUserModel();
+            $this->updateUserModelForApi();
 
             // Update routing configuration
             $this->updateBootstrapApp();
@@ -350,7 +350,7 @@ SHELL;
         });
     }
 
-    private function updateUserModel(): void
+    private function updateUserModelForApi(): void
     {
         $userModelFile = $this->projectPath.'/app/Models/User.php';
         $userModel = File::get($userModelFile);
