@@ -1,0 +1,51 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - '[0-9]*'  # Trigger when pushing tags starting with numbers (e.g., 1.0.0, 2.1.3)
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Allow creating releases and uploading assets
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get tag name
+        id: tag
+        run: echo "tag_name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Check if binary exists
+        run: |
+          if [ ! -f "builds/laravel-api-forge" ]; then
+            echo "Error: builds/laravel-api-forge not found"
+            exit 1
+          fi
+          echo "Binary found, size: $(du -h builds/laravel-api-forge | cut -f1)"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.tag_name }}
+          name: Release ${{ steps.tag.outputs.tag_name }}
+          body: |
+            ## 📦 Release ${{ steps.tag.outputs.tag_name }}
+
+            ### Download
+            - Download the `laravel-api-forge` executable
+            - Grant execution permission: `chmod +x laravel-api-forge`
+
+            ### What's Changed
+            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.tag.outputs.tag_name }}...HEAD
+          files: |
+            builds/laravel-api-forge
+          draft: false
+          prerelease: false
