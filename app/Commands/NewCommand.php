@@ -57,7 +57,8 @@ class NewCommand extends Command
         // Get optional features
         $this->useRedis = $this->option('redis') ?: $this->confirm('Do you want to use Redis as cache store?', true);
         $this->useRbac = $this->option('rbac') ?: $this->confirm('Do you want to install RBAC package?', true);
-        $this->useModules = $this->option('modules') ?: $this->confirm('Do you want to install modular architecture?', true);
+        $this->useModules = $this->option('modules')
+            ?: $this->confirm('Do you want to install modular architecture?', true);
 
         $this->info("Creating Laravel API project: {$this->projectName}");
         $this->displaySelectedFeatures();
@@ -164,7 +165,7 @@ class NewCommand extends Command
             // Create .git-hooks directory
             File::makeDirectory($this->projectPath.'/.git-hooks', 0755, false, true);
 
-            // Create sail-utils file
+            // Create `sail-utils` file
             $sailUtils = <<<'SHELL'
 #!/bin/sh
 
@@ -182,7 +183,7 @@ SHELL;
             File::put($this->projectPath.'/.git-hooks/sail-utils', $sailUtils);
             chmod($this->projectPath.'/.git-hooks/sail-utils', 0755);
 
-            // Create pre-commit hook
+            // Create `pre-commit` hook
             $preCommit = <<<'SHELL'
 #!/bin/sh
 set -e
@@ -194,7 +195,7 @@ SHELL;
             File::put($this->projectPath.'/.git-hooks/pre-commit', $preCommit);
             chmod($this->projectPath.'/.git-hooks/pre-commit', 0755);
 
-            // Create pre-push hook
+            // Create `pre-push` hook
             $prePush = <<<'SHELL'
 #!/bin/sh
 set -e
@@ -206,7 +207,7 @@ SHELL;
             File::put($this->projectPath.'/.git-hooks/pre-push', $prePush);
             chmod($this->projectPath.'/.git-hooks/pre-push', 0755);
 
-            // Create post-merge hook
+            // Create ``post-merge`` hook
             $postMerge = <<<'SHELL'
 #!/bin/sh
 set -e
@@ -325,7 +326,9 @@ SHELL;
             ]);
 
             // Install Sail
-            $this->executeCommand([$this->phpExecutable, 'artisan', 'sail:install', '--with=mysql,redis,mailpit', '--no-interaction']);
+            $this->executeCommand([
+                $this->phpExecutable, 'artisan', 'sail:install', '--with=mysql,redis,mailpit', '--no-interaction',
+            ]);
         });
     }
 
@@ -341,7 +344,7 @@ SHELL;
             // Update routing configuration
             $this->updateBootstrapApp();
 
-            // Create docs directory
+            // Create a docs directory
             File::makeDirectory($this->projectPath.'/docs/v1', 0755, true, true);
             File::put($this->projectPath.'/docs/v1/.gitkeep', '');
         });
@@ -390,8 +393,13 @@ SHELL;
             $this->executeCommand(['composer', 'require', 'binary-cats/laravel-rbac']);
 
             // Publish configurations
-            $this->executeCommand([$this->phpExecutable, 'artisan', 'vendor:publish', '--provider=Spatie\Permission\PermissionServiceProvider', '--no-interaction']);
-            $this->executeCommand([$this->phpExecutable, 'artisan', 'vendor:publish', '--tag=rbac-config', '--no-interaction']);
+            $this->executeCommand([
+                $this->phpExecutable, 'artisan', 'vendor:publish',
+                '--provider=Spatie\Permission\PermissionServiceProvider', '--no-interaction',
+            ]);
+            $this->executeCommand([
+                $this->phpExecutable, 'artisan', 'vendor:publish', '--tag=rbac-config', '--no-interaction',
+            ]);
 
             // Create Abilities directory
             File::makeDirectory($this->projectPath.'/app/Abilities', 0755, false, true);
@@ -470,7 +478,10 @@ SHELL;
             $this->executeCommand(['composer', 'require', 'nwidart/laravel-modules']);
 
             // Publish configuration
-            $this->executeCommand([$this->phpExecutable, 'artisan', 'vendor:publish', '--provider=Nwidart\Modules\LaravelModulesServiceProvider', '--no-interaction']);
+            $this->executeCommand([
+                $this->phpExecutable, 'artisan', 'vendor:publish',
+                '--provider=Nwidart\Modules\LaravelModulesServiceProvider', '--no-interaction',
+            ]);
 
             // Setup directories and files
             if (File::exists($this->projectPath.'/stubs')) {
@@ -611,7 +622,10 @@ JS;
     {
         $this->task('Installing Laravel Data', function () {
             $this->executeCommand(['composer', 'require', 'spatie/laravel-data']);
-            $this->executeCommand([$this->phpExecutable, 'artisan', 'vendor:publish', '--provider=Spatie\LaravelData\LaravelDataServiceProvider', '--tag=data-config', '--no-interaction']);
+            $this->executeCommand([
+                $this->phpExecutable, 'artisan', 'vendor:publish',
+                '--provider=Spatie\LaravelData\LaravelDataServiceProvider', '--tag=data-config', '--no-interaction',
+            ]);
         });
     }
 
@@ -619,7 +633,10 @@ JS;
     {
         $this->task('Installing Spectator', function () {
             $this->executeCommand(['composer', 'require', 'hotmeteor/spectator', '--dev']);
-            $this->executeCommand([$this->phpExecutable, 'artisan', 'vendor:publish', '--provider=Spectator\SpectatorServiceProvider', '--no-interaction']);
+            $this->executeCommand([
+                $this->phpExecutable, 'artisan', 'vendor:publish', '--provider=Spectator\SpectatorServiceProvider',
+                '--no-interaction',
+            ]);
 
             // Add SPEC_PATH to .env files
             $this->appendToEnvFiles("\nSPEC_PATH=docs\n");
@@ -700,7 +717,7 @@ JS;
             $pintPath = $this->projectPath.'/vendor/bin/pint';
 
             if (file_exists($pintPath)) {
-                // Get list of changed PHP files
+                // Get a list of changed PHP files
                 $changedPhpFiles = $this->getChangedPhpFiles();
 
                 if (! empty($changedPhpFiles)) {
@@ -721,7 +738,7 @@ JS;
     }
 
     /**
-     * Get list of changed PHP files
+     * Get a list of changed PHP files
      */
     private function getChangedPhpFiles(): array
     {
@@ -746,7 +763,10 @@ JS;
                 $filename = trim(substr($line, 3));
 
                 // Check if it's a PHP file and exists
-                if (pathinfo($filename, PATHINFO_EXTENSION) === 'php' && file_exists($this->projectPath.'/'.$filename)) {
+                if (
+                    pathinfo($filename, PATHINFO_EXTENSION) === 'php'
+                    && file_exists($this->projectPath.'/'.$filename)
+                ) {
                     $phpFiles[] = $filename;
                 }
             }
@@ -976,8 +996,8 @@ JS;
     private function updateEnvFiles(array $replacements): void
     {
         $envFiles = [
-            $this->projectPath . '/.env',
-            $this->projectPath . '/.env.example',
+            $this->projectPath.'/.env',
+            $this->projectPath.'/.env.example',
         ];
 
         foreach ($envFiles as $envFile) {
@@ -999,8 +1019,8 @@ JS;
     private function appendToEnvFiles(string $content): void
     {
         $envFiles = [
-            $this->projectPath . '/.env',
-            $this->projectPath . '/.env.example',
+            $this->projectPath.'/.env',
+            $this->projectPath.'/.env.example',
         ];
 
         foreach ($envFiles as $envFile) {
