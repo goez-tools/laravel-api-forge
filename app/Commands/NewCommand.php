@@ -232,6 +232,16 @@ SHELL;
         File::put($composerFile, json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 
+    private function updateUserModel(callable $callback): void
+    {
+        $userModelFile = $this->projectPath.'/app/Models/User.php';
+        $userModel = File::get($userModelFile);
+
+        $userModel = $callback($userModel);
+
+        File::put($userModelFile, $userModel);
+    }
+
     private function updateComposerScript(): void
     {
         $this->updateComposerJson(function ($composer) {
@@ -352,24 +362,21 @@ SHELL;
 
     private function updateUserModelForApi(): void
     {
-        $userModelFile = $this->projectPath.'/app/Models/User.php';
-        $userModel = File::get($userModelFile);
+        $this->updateUserModel(function ($userModel) {
+            // Add HasApiTokens import
+            $userModel = str_replace(
+                'use Illuminate\Foundation\Auth\User as Authenticatable;',
+                "use Illuminate\Foundation\Auth\User as Authenticatable;\nuse Laravel\Sanctum\HasApiTokens;",
+                $userModel
+            );
 
-        // Add HasApiTokens import
-        $userModel = str_replace(
-            'use Illuminate\Foundation\Auth\User as Authenticatable;',
-            "use Illuminate\Foundation\Auth\User as Authenticatable;\nuse Laravel\Sanctum\HasApiTokens;",
-            $userModel
-        );
-
-        // Add HasApiTokens trait
-        $userModel = str_replace(
-            'use HasFactory, Notifiable;',
-            'use HasApiTokens, HasFactory, Notifiable;',
-            $userModel
-        );
-
-        File::put($userModelFile, $userModel);
+            // Add HasApiTokens trait
+            return str_replace(
+                'use HasFactory, Notifiable;',
+                'use HasApiTokens, HasFactory, Notifiable;',
+                $userModel
+            );
+        });
     }
 
     private function updateBootstrapApp(): void
@@ -426,26 +433,24 @@ SHELL;
 
     private function updateUserModelForRoles(): void
     {
-        $userModelFile = $this->projectPath.'/app/Models/User.php';
-        $userModel = File::get($userModelFile);
+        $this->updateUserModel(function ($userModel) {
+            // Add HasRoles import
+            if (! str_contains($userModel, 'use Spatie\Permission\Traits\HasRoles;')) {
+                $userModel = str_replace(
+                    'use Laravel\Sanctum\HasApiTokens;',
+                    "use Laravel\Sanctum\HasApiTokens;\nuse Spatie\Permission\Traits\HasRoles;",
+                    $userModel
+                );
+            }
 
-        // Add HasRoles import
-        if (! str_contains($userModel, 'use Spatie\Permission\Traits\HasRoles;')) {
-            $userModel = str_replace(
-                'use Laravel\Sanctum\HasApiTokens;',
-                "use Laravel\Sanctum\HasApiTokens;\nuse Spatie\Permission\Traits\HasRoles;",
+            // Add HasRoles trait
+            return str_replace(
+                'use HasApiTokens, HasFactory, Notifiable;',
+                'use HasApiTokens, HasFactory, HasRoles, Notifiable;',
                 $userModel
             );
-        }
 
-        // Add HasRoles trait
-        $userModel = str_replace(
-            'use HasApiTokens, HasFactory, Notifiable;',
-            'use HasApiTokens, HasFactory, HasRoles, Notifiable;',
-            $userModel
-        );
-
-        File::put($userModelFile, $userModel);
+        });
     }
 
     private function updateComposerForRbac(): void
