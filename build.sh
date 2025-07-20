@@ -107,3 +107,13 @@ echo "🎉 Executable built successfully, version: $VERSION"
 SIZE=$(stat -f%z builds/laravel-api-forge 2>/dev/null || stat -c%s builds/laravel-api-forge 2>/dev/null || echo "Unknown")
 echo "📊 Executable size: $SIZE bytes"
 echo "📍 Executable location: builds/laravel-api-forge"
+
+# Git operations - commit and tag the release
+echo "🔖 Creating git commit and tag..."
+git add builds/laravel-api-forge
+git commit -m "release: $VERSION"
+git tag "$VERSION"
+
+echo "✅ Git commit and tag created successfully!"
+echo "📝 Commit message: release: $VERSION"
+echo "🏷️  Tag: $VERSION"
