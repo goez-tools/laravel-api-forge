@@ -512,13 +512,11 @@ SHELL;
     {
         $this->updateUserModel(function ($userModel) {
             // Add HasRoles import
-            if (! str_contains($userModel, 'use Spatie\Permission\Traits\HasRoles;')) {
-                $userModel = str_replace(
-                    'use Laravel\Sanctum\HasApiTokens;',
-                    "use Laravel\Sanctum\HasApiTokens;\nuse Spatie\OneTimePasswords\Models\Concerns\HasOneTimePasswords;",
-                    $userModel
-                );
-            }
+            $userModel = str_replace(
+                'use Laravel\Sanctum\HasApiTokens;',
+                "use Laravel\Sanctum\HasApiTokens;\nuse Spatie\OneTimePasswords\Models\Concerns\HasOneTimePasswords;",
+                $userModel
+            );
 
             // Add HasRoles trait
             return str_replace(
