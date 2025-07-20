@@ -101,6 +101,29 @@ laravel-api-forge new my-api-project
 # Do you want to use SQLite for testing database? (yes/no)
 ```
 
+### Self-Update
+
+Keep your Laravel API Forge up to date with the built-in self-update feature:
+
+```bash
+# Check for updates
+laravel-api-forge self-update --check
+
+# Update to the latest version
+laravel-api-forge self-update
+
+# Rollback to the previous version (if needed)
+laravel-api-forge self-update --rollback
+
+# Force update even if versions match
+laravel-api-forge self-update --force
+
+# Include pre-release versions
+laravel-api-forge self-update --pre-release
+```
+
+**Note**: The self-update feature only works when using the PHAR build of the tool.
+
 ## 🏗️ What Gets Created
 
 The tool creates a complete Laravel API project with:

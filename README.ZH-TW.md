@@ -101,6 +101,29 @@ laravel-api-forge new my-api-project
 # Do you want to use SQLite for testing database? (yes/no)
 ```
 
+### 自動更新
+
+使用內建的自動更新功能保持您的 Laravel API Forge 為最新版本：
+
+```bash
+# 檢查更新
+laravel-api-forge self-update --check
+
+# 更新到最新版本
+laravel-api-forge self-update
+
+# 回滾到前一版本（如果需要的話）
+laravel-api-forge self-update --rollback
+
+# 強制更新，即使版本相同
+laravel-api-forge self-update --force
+
+# 包含預發布版本
+laravel-api-forge self-update --pre-release
+```
+
+**注意**：自動更新功能僅在使用 PHAR 建置版本的工具時有效。
+
 ## 🏗️ 創建的專案內容
 
 此工具創建一個完整的 Laravel API 專案，包含：
