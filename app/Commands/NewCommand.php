@@ -76,7 +76,9 @@ class NewCommand extends Command
 
         try {
             $this->createLaravelProject();
-            $this->initializeGitRepo();
+
+            // Change to project directory after creation
+            chdir($this->projectPath);
 
             $this->adjustTests();
             $this->commitStep('Adjust test configuration');
@@ -155,28 +157,9 @@ class NewCommand extends Command
             $this->executeCommand([
                 'laravel', 'new', $this->projectName,
                 '--pest',
+                '--git',
                 '--no-interaction',
             ]);
-        });
-    }
-
-    private function initializeGitRepo(): void
-    {
-        $this->task('Initializing Git repository', function () {
-            chdir($this->projectPath);
-
-            $this->executeCommand(['git', 'init']);
-
-            // Set git config if available
-            if ($email = $this->ask('Enter your git email (optional)')) {
-                $this->executeCommand(['git', 'config', 'user.email', $email]);
-            }
-            if ($name = $this->ask('Enter your git name (optional)')) {
-                $this->executeCommand(['git', 'config', 'user.name', $name]);
-            }
-
-            $this->executeCommand(['git', 'add', '.']);
-            $this->executeCommand(['git', 'commit', '-m', 'Init commit']);
         });
     }
 
