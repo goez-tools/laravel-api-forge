@@ -19,7 +19,8 @@ class NewCommand extends Command
                            {--redis : Use Redis as cache store}
                            {--rbac : Install and configure RBAC package}
                            {--otp : Install and configure One-Time-Passwords package}
-                           {--modules : Install and configure modular architecture}';
+                           {--modules : Install and configure modular architecture}
+                           {--test-sqlite : Use SQLite for testing database}';
 
     /**
      * The console command description.
@@ -41,6 +42,8 @@ class NewCommand extends Command
     private bool $useOtp = false;
 
     private bool $useModules = false;
+
+    private bool $useTestSqlite = false;
 
     /**
      * Execute the console command.
@@ -65,6 +68,8 @@ class NewCommand extends Command
             ?: $this->confirm('Do you want to install One-Time-Passwords package?', true);
         $this->useModules = $this->option('modules')
             ?: $this->confirm('Do you want to install modular architecture?', true);
+        $this->useTestSqlite = $this->option('test-sqlite')
+            ?: $this->confirm('Do you want to use SQLite for testing database?', true);
 
         $this->info("Creating Laravel API project: {$this->projectName}");
         $this->displaySelectedFeatures();
@@ -106,6 +111,9 @@ class NewCommand extends Command
             $this->commitStep('Install Spectator package');
 
             $this->setupSail();
+            if ($this->useTestSqlite) {
+                $this->revertTestDatabaseToSqlite();
+            }
             $this->commitStep('Setup Laravel Sail');
 
             $this->setupGitHooks();
@@ -137,6 +145,7 @@ class NewCommand extends Command
         $this->line(($this->useRbac ? '✅' : '❌').' RBAC Package');
         $this->line(($this->useOtp ? '✅' : '❌').' One-Time-Passwords Package');
         $this->line(($this->useModules ? '✅' : '❌').' Modular Architecture');
+        $this->line(($this->useTestSqlite ? '✅' : '❌').' Use SQLite for Testing');
         $this->newLine();
     }
 
@@ -352,6 +361,15 @@ SHELL;
             $this->executeCommand([
                 $this->phpExecutable, 'artisan', 'sail:install', '--with=mysql,redis,mailpit', '--no-interaction',
             ]);
+        });
+    }
+
+    private function revertTestDatabaseToSqlite(): void
+    {
+        $this->task('Reverting test database configuration to SQLite', function () {
+            // Use git checkout to restore the original phpunit.xml file
+            // This will revert any changes made by Sail installation
+            $this->executeCommand(['git', 'checkout', 'HEAD', 'phpunit.xml']);
         });
     }
 
