@@ -20,6 +20,7 @@ Laravel API Forge 是一個強大的命令列工具，幫助您快速搭建完�
 - **📊 資料庫**：使用 Laravel Sail 的 MySQL 資料庫配置
 - **⚡ Redis 快取**：可選的 Redis 快取配置
 - **🛡️ RBAC 系統**：可選的角色權限控制系統（Spatie Permission）
+- **🔐 一次性密碼**：可選的 OTP 套件以增強安全性
 - **🧩 模組化架構**：可選的 Laravel Modules 模組化開發
 - **📚 API 文件**：Spectator 用於 OpenAPI 規範測試
 - **🎯 資料傳輸物件**：Laravel Data 用於結構化資料處理
@@ -74,13 +75,14 @@ laravel-api-forge new my-api-project
 ### 進階用法（帶選項）
 
 ```bash
-laravel-api-forge new my-api-project --redis --rbac --modules
+laravel-api-forge new my-api-project --redis --rbac --otp --modules
 ```
 
 ### 可用選項
 
 - `--redis`：使用 Redis 作為快取儲存
 - `--rbac`：安裝和配置 RBAC（角色權限控制）套件
+- `--otp`：安裝和配置一次性密碼套件
 - `--modules`：安裝和配置 Laravel Modules 模組化架構
 
 ### 互動式模式
@@ -92,7 +94,8 @@ laravel-api-forge new my-api-project
 
 # 系統會詢問：
 # Do you want to use Redis as cache store? (yes/no)
-# Do you want to install RBAC package? (yes/no)  
+# Do you want to install RBAC package? (yes/no)
+# Do you want to install One-Time-Passwords package? (yes/no)  
 # Do you want to install modular architecture? (yes/no)
 ```
 
@@ -119,6 +122,12 @@ laravel-api-forge new my-api-project
 - 支援團隊權限
 - 預配置的 User 模型與角色
 - Abilities 目錄結構
+
+#### 一次性密碼（`--otp`）
+- 一次性密碼套件整合
+- 增強身份驗證安全性
+- 支援時間型和計數器型 OTP
+- 與現有身份驗證流程簡易整合
 
 #### 模組化架構（`--modules`）
 - Laravel Modules 套件

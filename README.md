@@ -20,6 +20,7 @@ Laravel API Forge is a powerful command-line tool that helps you quickly scaffol
 - **📊 Database**: MySQL database configuration with Laravel Sail
 - **⚡ Redis Cache**: Optional Redis caching configuration
 - **🛡️ RBAC System**: Optional role-based access control with Spatie Permission
+- **🔐 One-Time-Passwords**: Optional OTP package for enhanced security
 - **🧩 Modular Architecture**: Optional Laravel Modules for modular development
 - **📚 API Documentation**: Spectator for OpenAPI specification testing
 - **🎯 Data Transfer Objects**: Laravel Data for structured data handling
@@ -74,13 +75,14 @@ laravel-api-forge new my-api-project
 ### Advanced Usage with Options
 
 ```bash
-laravel-api-forge new my-api-project --redis --rbac --modules
+laravel-api-forge new my-api-project --redis --rbac --otp --modules
 ```
 
 ### Available Options
 
 - `--redis`: Use Redis as the cache store
 - `--rbac`: Install and configure RBAC (Role-Based Access Control) package
+- `--otp`: Install and configure One-Time-Passwords package
 - `--modules`: Install and configure modular architecture with Laravel Modules
 
 ### Interactive Mode
@@ -92,7 +94,8 @@ laravel-api-forge new my-api-project
 
 # You'll be asked:
 # Do you want to use Redis as cache store? (yes/no)
-# Do you want to install RBAC package? (yes/no)  
+# Do you want to install RBAC package? (yes/no)
+# Do you want to install One-Time-Passwords package? (yes/no)  
 # Do you want to install modular architecture? (yes/no)
 ```
 
@@ -119,6 +122,12 @@ The tool creates a complete Laravel API project with:
 - Team-based permissions support
 - Pre-configured User model with roles
 - Abilities directory structure
+
+#### One-Time-Passwords (`--otp`)
+- One-Time-Passwords package integration
+- Enhanced authentication security
+- Support for time-based and counter-based OTP
+- Easy integration with existing authentication flow
 
 #### Modular Architecture (`--modules`)
 - Laravel Modules package
