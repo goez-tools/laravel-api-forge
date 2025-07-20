@@ -75,7 +75,7 @@ laravel-api-forge new my-api-project
 ### 進階用法（帶選項）
 
 ```bash
-laravel-api-forge new my-api-project --redis --rbac --otp --modules
+laravel-api-forge new my-api-project --redis --rbac --otp --modules --test-sqlite
 ```
 
 ### 可用選項
@@ -84,6 +84,7 @@ laravel-api-forge new my-api-project --redis --rbac --otp --modules
 - `--rbac`：安裝和配置 RBAC（角色權限控制）套件
 - `--otp`：安裝和配置一次性密碼套件
 - `--modules`：安裝和配置 Laravel Modules 模組化架構
+- `--test-sqlite`：使用 SQLite 作為測試資料庫（在 Sail 設置後回復到 SQLite）
 
 ### 互動式模式
 
@@ -97,6 +98,7 @@ laravel-api-forge new my-api-project
 # Do you want to install RBAC package? (yes/no)
 # Do you want to install One-Time-Passwords package? (yes/no)  
 # Do you want to install modular architecture? (yes/no)
+# Do you want to use SQLite for testing database? (yes/no)
 ```
 
 ## 🏗️ 創建的專案內容
@@ -145,6 +147,7 @@ laravel-api-forge new my-api-project
 - 使用 Pint 自動格式化程式碼
 - 環境檔案同步（.env 和 .env.example）
 - 分步驟 Git 提交以獲得更好的歷史記錄
+- 可選的 SQLite 測試資料庫配置
 
 ## 🔄 開發流程
 

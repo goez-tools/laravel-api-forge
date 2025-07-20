@@ -75,7 +75,7 @@ laravel-api-forge new my-api-project
 ### Advanced Usage with Options
 
 ```bash
-laravel-api-forge new my-api-project --redis --rbac --otp --modules
+laravel-api-forge new my-api-project --redis --rbac --otp --modules --test-sqlite
 ```
 
 ### Available Options
@@ -84,6 +84,7 @@ laravel-api-forge new my-api-project --redis --rbac --otp --modules
 - `--rbac`: Install and configure RBAC (Role-Based Access Control) package
 - `--otp`: Install and configure One-Time-Passwords package
 - `--modules`: Install and configure modular architecture with Laravel Modules
+- `--test-sqlite`: Use SQLite for testing database (reverts to SQLite after Sail setup)
 
 ### Interactive Mode
 
@@ -97,6 +98,7 @@ laravel-api-forge new my-api-project
 # Do you want to install RBAC package? (yes/no)
 # Do you want to install One-Time-Passwords package? (yes/no)  
 # Do you want to install modular architecture? (yes/no)
+# Do you want to use SQLite for testing database? (yes/no)
 ```
 
 ## 🏗️ What Gets Created
@@ -145,6 +147,7 @@ The tool creates a complete Laravel API project with:
 - Automatic code formatting with Pint
 - Environment file synchronization (.env and .env.example)
 - Step-by-step Git commits for better history
+- Optional SQLite testing database configuration
 
 ## 🔄 Development Workflow
 
