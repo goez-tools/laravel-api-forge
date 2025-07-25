@@ -81,49 +81,49 @@ class NewCommand extends Command
             chdir($this->projectPath);
 
             $this->adjustTests();
-            $this->commitStep('Adjust test configuration');
+            $this->commitStep('chore: adjust test configuration');
 
             $this->setupApiEnvironment();
-            $this->commitStep('Setup API environment');
+            $this->commitStep('feat: setup API environment');
 
             if ($this->useRedis) {
                 $this->setupRedisCache();
-                $this->commitStep('Setup Redis cache');
+                $this->commitStep('feat: setup Redis cache');
             }
 
             if ($this->useRbac) {
                 $this->setupRbac();
-                $this->commitStep('Setup RBAC package');
+                $this->commitStep('feat: setup RBAC package');
             }
 
             if ($this->useOtp) {
                 $this->setupOtp();
-                $this->commitStep('Install One-Time-Passwords package');
+                $this->commitStep('feat: install One-Time-Passwords package');
             }
 
             if ($this->useModules) {
                 $this->setupModules();
-                $this->commitStep('Setup modular architecture');
+                $this->commitStep('feat: setup modular architecture');
             }
 
             $this->installLaravelData();
-            $this->commitStep('Install Laravel Data package');
+            $this->commitStep('feat: install Laravel Data package');
 
             $this->installSpectator();
-            $this->commitStep('Install Spectator package');
+            $this->commitStep('feat: install Spectator package');
 
             $this->setupSail();
             if ($this->useTestSqlite) {
                 $this->revertTestDatabaseToSqlite();
             }
-            $this->commitStep('Setup Laravel Sail');
+            $this->commitStep('feat: setup Laravel Sail');
 
             $this->setupGitHooks();
-            $this->commitStep('Setup Git hooks');
+            $this->commitStep('chore: setup Git hooks');
 
             if ($this->useRbac) {
                 $this->finalizeRbac();
-                $this->commitStep('Finalize RBAC configuration');
+                $this->commitStep('chore: finalize RBAC configuration');
             }
 
             $this->finalizeSetup();
